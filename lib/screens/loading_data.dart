@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:world_time/services/env_data.dart';
 import 'package:world_time/services/world_time.dart';
 
 class LoadingData extends StatefulWidget {
@@ -10,7 +11,7 @@ class LoadingData extends StatefulWidget {
 class _LoadingDataState extends State<LoadingData> {
 
   void loadTime() async {
-    WorldTime instance = WorldTime(urlHeader: 'Asia/Kolkata', loaction: 'Kolkata', flag: 'india.png');
+    WorldTime instance = WorldTime.getInstance(StaticResources.locations[1]);
     await instance.getTime();
     Navigator.pushReplacementNamed(context, '/home', arguments: instance );
   }

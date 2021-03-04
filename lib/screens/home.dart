@@ -8,11 +8,16 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  WorldTime instance;
+
   @override
   Widget build(BuildContext context) {
-
-    WorldTime instance = ModalRoute.of(context).settings.arguments;
-    print(instance.time);
+    if( instance != null ) print(instance.loaction);
+    if( instance == null ){
+      instance =  ModalRoute.of(context).settings.arguments;
+    }
+    String bgImage = instance.isDayTime ? 'day.png' : 'night.png';
+    print(instance.loaction);
     return Scaffold(
       appBar: AppBar(
         title: Text("World Time"),
@@ -20,11 +25,11 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.blue[900],
       ),
       body: Container(
-        child: getTimeInfowidget(instance),
+        child: getTimeInfoWidget(instance),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/day.png'),
+            image: AssetImage('assets/$bgImage'),
             fit: BoxFit.cover,
           )
         ),
@@ -32,7 +37,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget getTimeInfowidget( WorldTime instance ){
+  Widget getTimeInfoWidget( WorldTime instance ){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -78,9 +83,30 @@ class _HomeState extends State<Home> {
                   fontSize: 40.0,
                 ),
               ),
-            )
+            ),
           ],
         ),
+        SizedBox(height: 100.0,),
+        RaisedButton.icon(
+            onPressed: () async {
+              dynamic result = await Navigator.pushNamed(context, '/locationlist');
+              if( result != null ){
+                setState(() {
+                  instance = WorldTime.getInstance(result);
+                  print(instance.loaction);
+                });
+              }
+            },
+            icon: Icon(
+              Icons.edit_location,
+              color: Colors.green[900],
+            ),
+            color: Colors.green[200],
+            label: Text(
+                'Change Location',
+              style: TextStyle(color: Colors.black),
+            )
+        )
       ],
     );
   }

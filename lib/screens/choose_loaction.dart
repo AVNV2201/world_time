@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:world_time/services/env_data.dart';
+import 'package:world_time/services/world_time.dart';
 
 class ChooseLocation extends StatefulWidget {
   @override
@@ -9,55 +11,68 @@ class _ChooseLocationState extends State<ChooseLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[500],
+      backgroundColor: Colors.blue[300],
       appBar: AppBar(
         title: Text("Choose Location"),
         centerTitle: true,
         backgroundColor: Colors.indigo[500],
       ),
-      body: Container(
-        color: Colors.black,
-        // width: double.infinity,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: 180.0,
-              width: 180.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.orange[800],
-                  width: 10.0,
+      body: ListView.builder(
+          itemCount: StaticResources.locations.length,
+          itemBuilder: ( context, index ){
+            return Padding(
+              padding: const EdgeInsets.all(2.5),
+              child: InkWell(
+                onTap: (){
+                  updateLocation(index);
+                },
+                child: Card(
+                  child: Container(
+                    height: 120.0,
+                    alignment: Alignment.center,
+                    child: getListTile(index),
+                  ),
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 50.0,
-                  height: 50.0,
-                  color: Colors.red,
-                ),
-              ],
-            ),
-            Container(
-              height: 180.0,
-              width: 180.0,
-              decoration: BoxDecoration(
-                color: Colors.red,
-                border: Border.all(
-                  color: Colors.orange[800],
-                  width: 10.0,
-                ),
-              ),
-            ),
-          ],
-        ),
+            );
+          }
       ),
     );
   }
+
+  Widget getListTile( int index ){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Image(
+                image: AssetImage('assets/${StaticResources.locations[index].flag}'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+            child: Text(
+              StaticResources.locations[index].loaction,
+              style: TextStyle(
+                fontSize: 40.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+        )
+      ],
+    );
+  }  // getListTile
+
+  void updateLocation( int index ) async {
+    WorldTime instance = StaticResources.locations[index];
+    await instance.getTime();
+    print(instance.time);
+    Navigator.pop(context, instance );
+  }  // updateLocation
+
 }
