@@ -6,14 +6,19 @@ import 'package:world_time/services/env_data.dart';
 
 class WorldTime{
 
-  String loaction;
+  String location;
   String flag;
   String urlHeader;
   String time;
   String date;
   bool isDayTime;
+  bool isInitialized;
 
-  WorldTime({ this.loaction, this.flag, this.urlHeader });
+  WorldTime({ this.location, this.flag, this.urlHeader, this.isInitialized = true });
+
+  WorldTime.getInstance(){
+    isInitialized = false;
+  }
 
   Future<void> getTime() async {
     Response response = await get('${StaticResources.timeApiUrl}$urlHeader');
@@ -36,16 +41,14 @@ class WorldTime{
     isDayTime = ( dateTime.hour >= 6 && dateTime.hour <= 19 ) ;
   }
 
-  static WorldTime getInstance( WorldTime w ){
-    WorldTime newInstance = WorldTime(
-      loaction: w.loaction,
-      flag: w.flag,
-      urlHeader: w.urlHeader
-    );
-    newInstance.time = w.time;
-    newInstance.date = w.date;
-    newInstance.isDayTime = w.isDayTime;
-    return newInstance;
+  void copy( WorldTime w ){
+    this.location = w.location;
+    this.time = w.time;
+    this.flag = w.flag;
+    this.date = w.date;
+    this.isDayTime = w.isDayTime;
+    this.urlHeader = w.urlHeader;
+    this.isInitialized = true;
   }
 
 }

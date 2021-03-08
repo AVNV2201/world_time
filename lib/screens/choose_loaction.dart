@@ -57,7 +57,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
         Expanded(
           flex: 2,
             child: Text(
-              StaticResources.locations[index].loaction,
+              StaticResources.locations[index].location,
               style: TextStyle(
                 fontSize: 40.0,
                 fontWeight: FontWeight.bold,

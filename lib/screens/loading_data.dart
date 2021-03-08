@@ -11,7 +11,8 @@ class LoadingData extends StatefulWidget {
 class _LoadingDataState extends State<LoadingData> {
 
   void loadTime() async {
-    WorldTime instance = WorldTime.getInstance(StaticResources.locations[1]);
+    WorldTime instance = WorldTime.getInstance();
+    instance.copy(StaticResources.locations[2]);
     await instance.getTime();
     Navigator.pushReplacementNamed(context, '/home', arguments: instance );
   }
